@@ -1,0 +1,754 @@
+diff --git a/node_modules/react-native-calendars/.DS_Store b/node_modules/react-native-calendars/.DS_Store
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-calendars/src/.DS_Store b/node_modules/react-native-calendars/src/.DS_Store
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-calendars/src/calendar-list/index.d.ts b/node_modules/react-native-calendars/src/calendar-list/index.d.ts
+index a762a7a..6149bd7 100644
+--- a/node_modules/react-native-calendars/src/calendar-list/index.d.ts
++++ b/node_modules/react-native-calendars/src/calendar-list/index.d.ts
+@@ -39,6 +39,7 @@ export interface CalendarListProps extends CalendarProps, Omit<FlatListProps<any
+     onLayout?: (event: LayoutChangeEvent) => void;
+     removeClippedSubviews?: boolean;
+     testID?: string;
++    toggleExpand: () => void;
+ }
+ declare type XDateAndBump = XDate & {
+     propBump?: number;
+diff --git a/node_modules/react-native-calendars/src/calendar/header/index.js b/node_modules/react-native-calendars/src/calendar/header/index.js
+index ad35a94..6902dab 100644
+--- a/node_modules/react-native-calendars/src/calendar/header/index.js
++++ b/node_modules/react-native-calendars/src/calendar/header/index.js
+@@ -8,6 +8,7 @@ import { CHANGE_MONTH_LEFT_ARROW, CHANGE_MONTH_RIGHT_ARROW, HEADER_DAY_NAMES, HE
+ // @ts-expect-error
+  } from '../../testIDs';
+ import styleConstructor from './style';
++import styles from './styles';
+ const accessibilityActions = [
+     { name: 'increment', label: 'increment' },
+     { name: 'decrement', label: 'decrement' }
+@@ -108,9 +109,12 @@ const CalendarHeader = forwardRef((props, ref) => {
+     };
+     const renderDayNames = () => {
+         if (!hideDayNames) {
+-            return (<View style={style.current.week} testID={testID ? `${HEADER_DAY_NAMES}-${testID}` : HEADER_DAY_NAMES}>
++            return (
++            <View>  
++        <View style={style.current.week} testID={testID ? `${HEADER_DAY_NAMES}-${testID}` : HEADER_DAY_NAMES}>
+           {renderWeekNumbersSpace()}
+           {renderWeekDays}
++        </View>
+         </View>);
+         }
+     };
+diff --git a/node_modules/react-native-calendars/src/calendar/header/style.js b/node_modules/react-native-calendars/src/calendar/header/style.js
+index f40769d..8733565 100644
+--- a/node_modules/react-native-calendars/src/calendar/header/style.js
++++ b/node_modules/react-native-calendars/src/calendar/header/style.js
+@@ -1,6 +1,7 @@
+ import { StyleSheet, Platform } from 'react-native';
+ import * as defaultStyle from '../../style';
+ import constants from '../../commons/constants';
++import {Colors, Spacing} from 'styles';
+ export default function (theme = {}) {
+     const appStyle = { ...defaultStyle, ...theme };
+     const flipStyle = constants.isRTL ? { transform: [{ scaleX: -1 }] } : undefined;
+diff --git a/node_modules/react-native-calendars/src/calendar/header/styles.ts b/node_modules/react-native-calendars/src/calendar/header/styles.ts
+new file mode 100644
+index 0000000..cbd80c5
+--- /dev/null
++++ b/node_modules/react-native-calendars/src/calendar/header/styles.ts
+@@ -0,0 +1,227 @@
++import { hp } from './../../../../../src/utils/commonFunctions';
++import { StyleSheet } from "react-native";
++const styles=StyleSheet.create({
++    info: {
++        flexDirection: 'row',
++        justifyContent: 'space-between',
++        alignItems: 'center',
++        marginLeft: 20,
++        marginTop: 20,
++        marginRight: 30,
++      },
++      infoText: {
++        color: '#757D88',
++        fontSize: 12,
++      },
++      foc: {
++        backgroundColor: '#007AC3',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++        alignSelf: 'center',
++      },
++      paid: {
++        backgroundColor: '#0B936F',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++        alignSelf: 'center',
++      },
++      todays: {
++        backgroundColor: '#F2D4FF',
++        alignSelf: 'center',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++        borderColor: '#CE5FFF',
++        borderWidth: 1,
++      },
++      focPaid: {
++        backgroundColor: '#CE3F48',
++        alignSelf: 'center',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++      },
++      row: {
++        flexDirection: 'row',
++      },
++      info2: {
++        flexDirection: 'row',
++        justifyContent: 'space-around',
++        alignItems: 'center',
++        marginLeft: 20,
++        marginTop: 15,
++        marginBottom: 15,
++        marginRight: 20,
++      },
++      info3: {
++        flexDirection: 'row',
++        justifyContent: 'space-between',
++        alignItems: 'center',
++        marginLeft: 20,
++        marginBottom: 15,
++        marginRight: 20,
++      },
++      psychoSocial:{
++        backgroundColor: '#0B41CD',
++        alignSelf: 'center',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++      },
++      nutritian: {
++        backgroundColor: '#7F3B7F',
++        alignSelf: 'center',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++      },
++      physo: {
++        backgroundColor: '#C85079',
++        alignSelf: 'center',
++        width: 10,
++        height: 10,
++        borderRadius: 50,
++      },
++      calendarBottomView: {
++        backgroundColor: '#F7F2FF',
++        marginHorizontal: 10,
++        borderRadius: 10,
++      },
++      imageView: {
++        height: 40,
++        width: 40,
++        borderRadius: 50,
++        position: 'absolute',
++        marginLeft: -40,
++        marginTop: 20,
++      },
++      focDateViewRow: {
++        flexDirection: 'row',
++        justifyContent: 'space-between',
++        marginHorizontal: 20,
++        marginTop: 10,
++        backgroundColor: '#E9EDF8',
++        borderRadius: 10,
++      },
++      nutritionView: {
++        flexDirection: 'row',
++        justifyContent: 'space-between',
++        marginHorizontal: 20,
++        marginTop: 10,
++        backgroundColor: 'rgba(11, 65, 205, 0.07)',
++        borderRadius: 10,
++      },
++      focDescription: {
++        // marginTop: 5,
++        color: '#717983',
++        // marginRight: 100,
++        fontFamily: 'NotoSans-Bold'
++      },
++      focTitle: {
++        color: '#0B41CD',
++        fontFamily: 'NotoSans-Bold',
++        fontSize:12,
++        lineHeight:16,
++      },
++      verticalFocView: {
++        borderTopLeftRadius: 10,
++        borderBottomLeftRadius: 10,
++        width: 7,
++      },
++      paddingView: {
++        width:'100%',
++        padding: 12,
++        alignItems:'flex-start'
++      },
++      marginTop: {
++        marginTop: 5,
++      },
++      link: {
++        color: '#0B41CD',
++        marginTop: 2,
++        fontSize:12,
++        lineHeight:16,
++        fontFamily:'NotoSans-Regular'
++      },
++      verticalNutritionView:{
++        backgroundColor: 'rgba(11, 65, 205, 1)',
++        borderTopLeftRadius: 10,
++        borderBottomLeftRadius: 10,
++        width: 7,
++      },
++      nutritionTitle: {
++        width:'100%',
++        color: '#0B41CD',
++        fontFamily: 'NotoSans-Bold',
++        fontSize:16,
++        lineHeight:32,
++      },
++      maginRight:{
++        right:20
++      },
++      cancelTitle:{
++        color: '#FC383E',
++        fontFamily: 'NotoSans-Bold',
++        fontSize:12,
++        lineHeight:16,
++      },
++      cancelButton: {
++        borderRadius: 20,
++        borderColor: '#FC383E',
++        borderWidth: 1,
++        marginRight: 30,
++        alignItems: 'center',
++        paddingHorizontal: 30,
++        paddingVertical: 5,
++      },
++      buttonRow: {
++        flexDirection: 'row',
++        justifyContent: 'space-around',
++        marginTop: 12,
++      },
++      rescheduleButton: {
++        borderRadius: 20,
++        backgroundColor: '#0B41CD',
++        marginRight: 30,
++        alignItems: 'center',
++        paddingHorizontal: 20,
++        paddingVertical: 5,
++      },
++      whiteText: {
++        color: 'white',
++        fontFamily: 'NotoSans-Bold',
++        fontSize:12,
++        lineHeight:16,
++      },
++      psychoSocialView: {
++        backgroundColor: '#FFF1DE',
++        flexDirection: 'row',
++        justifyContent: 'space-between',
++        marginHorizontal: 20,
++        marginTop: 10,
++        borderRadius: 10,
++      },
++      verticalPhychoSocialView: {
++        backgroundColor: '#FFAA3D',
++        borderTopLeftRadius: 10,
++        borderBottomLeftRadius: 10,
++        width: 7,
++      },
++      psychoSocialText: {
++        color: '#FFAA3D',
++        fontFamily: 'NotoSans-Bold',
++      },
++      openWeekText: {
++        color: '#696B6C',
++        marginLeft: 10,
++      },
++      openWeekView: {
++        flexDirection: 'row',
++        alignItems: 'center',
++        paddingTop: 20,
++        paddingBottom: 20,
++      },
++})
++export default styles;
+\ No newline at end of file
+diff --git a/node_modules/react-native-calendars/src/calendar/index.d.ts b/node_modules/react-native-calendars/src/calendar/index.d.ts
+index 0b28dd5..58ec27c 100644
+--- a/node_modules/react-native-calendars/src/calendar/index.d.ts
++++ b/node_modules/react-native-calendars/src/calendar/index.d.ts
+@@ -52,6 +52,12 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
+     customHeader?: any;
+     /** Allow selection of dates before minDate or after maxDate */
+     allowSelectionOutOfRange?: boolean;
++    isExpand?: boolean;
++    toggleExpand?: () => void;
++    isSchedule?: boolean;
++    onCancel?: () => void;
++    onClickSchedule?: () => void;
++    upcomingData?: []
+ }
+ /**
+  * @description: Calendar component
+diff --git a/node_modules/react-native-calendars/src/calendar/index.js b/node_modules/react-native-calendars/src/calendar/index.js
+index dc38b65..bbecf3c 100644
+--- a/node_modules/react-native-calendars/src/calendar/index.js
++++ b/node_modules/react-native-calendars/src/calendar/index.js
+@@ -1,27 +1,30 @@
+ import PropTypes from 'prop-types';
++import React, { useCallback, useEffect, useRef, useState } from 'react';
++import { FlatList, Linking, Pressable, Text, View } from 'react-native';
+ import XDate from 'xdate';
+-import React, { useRef, useState, useEffect, useCallback } from 'react';
+-import { View } from 'react-native';
+ // @ts-expect-error
+ import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+ import constants from '../commons/constants';
+-import { page, isGTE, isLTE, sameMonth } from '../dateutils';
+-import { xdateToData, parseDate, toMarkingFormat } from '../interface';
+-import { getState } from '../day-state-manager';
+ import { extractComponentProps } from '../componentUpdater';
++import { isGTE, isLTE, page, sameMonth } from '../dateutils';
++import { getState } from '../day-state-manager';
++import { parseDate, toMarkingFormat, xdateToData } from '../interface';
+ // @ts-expect-error
++import styles from 'react-native-calendars/src/calendar/header/styles';
++import Icons from 'react-native-vector-icons/FontAwesome';
++import Icon from 'react-native-vector-icons/Ionicons';
+ import { WEEK_NUMBER } from '../testIDs';
+-import styleConstructor from './style';
+-import CalendarHeader from './header';
+-import Day from './day/index';
+ import BasicDay from './day/basic';
++import Day from './day/index';
++import CalendarHeader from './header';
++import styleConstructor from './style';
+ /**
+  * @description: Calendar component
+  * @example: https://github.com/wix/react-native-calendars/blob/master/example/src/screens/calendars.js
+  * @gif: https://github.com/wix/react-native-calendars/blob/master/demo/assets/calendar.gif
+  */
+ const Calendar = (props) => {
+-    const { initialDate, current, theme, disableMonthChange, allowSelectionOutOfRange, minDate, maxDate, onDayPress, onDayLongPress, hideExtraDays, markedDates, firstDay, showSixWeeks, customHeader, headerStyle, displayLoadingIndicator, testID, enableSwipeMonths, accessibilityElementsHidden, importantForAccessibility, onMonthChange, onVisibleMonthsChange, style: propsStyle } = props;
++    const { initialDate, current, theme, disableMonthChange, allowSelectionOutOfRange, minDate, maxDate, onDayPress, onDayLongPress, hideExtraDays, markedDates, firstDay, showSixWeeks, customHeader, headerStyle, displayLoadingIndicator, testID, enableSwipeMonths, accessibilityElementsHidden, importantForAccessibility, onMonthChange, onVisibleMonthsChange, style: propsStyle, toggleExpand, isExpand, isSchedule, onCancel, onClickSchedule, upcomingData } = props;
+     const [currentMonth, setCurrentMonth] = useState(current || initialDate ? parseDate(current || initialDate) : new XDate());
+     const style = useRef(styleConstructor(theme));
+     const header = useRef();
+@@ -97,21 +100,21 @@ const Calendar = (props) => {
+     }, [onSwipeLeft, onSwipeRight]);
+     const renderWeekNumber = (weekNumber) => {
+         return (<View style={style.current.dayContainer} key={`week-container-${weekNumber}`}>
+-        <BasicDay key={`week-${weekNumber}`} marking={{ disabled: true, disableTouchEvent: true }} 
+-        // state='disabled'
+-        theme={theme} testID={`${WEEK_NUMBER}-${weekNumber}`}>
+-          {weekNumber}
+-        </BasicDay>
+-      </View>);
++            <BasicDay key={`week-${weekNumber}`} marking={{ disabled: true, disableTouchEvent: true }}
++                // state='disabled'
++                theme={theme} testID={`${WEEK_NUMBER}-${weekNumber}`}>
++                {weekNumber}
++            </BasicDay>
++        </View>);
+     };
+     const renderDay = (day, id) => {
+         const dayProps = extractComponentProps(Day, props);
+         if (!sameMonth(day, currentMonth) && hideExtraDays) {
+-            return <View key={id} style={style.current.emptyDayContainer}/>;
++            return <View key={id} style={style.current.emptyDayContainer} />;
+         }
+         return (<View style={style.current.dayContainer} key={id}>
+-        <Day {...dayProps} date={toMarkingFormat(day)} state={getState(day, currentMonth, props)} marking={markedDates?.[toMarkingFormat(day)]} onPress={onPressDay} onLongPress={onLongPressDay}/>
+-      </View>);
++            <Day {...dayProps} date={toMarkingFormat(day)} state={getState(day, currentMonth, props)} marking={markedDates?.[toMarkingFormat(day)]} onPress={onPressDay} onLongPress={onLongPressDay} />
++        </View>);
+     };
+     const renderWeek = (days, id) => {
+         const week = [];
+@@ -122,8 +125,8 @@ const Calendar = (props) => {
+             week.unshift(renderWeekNumber(days[days.length - 1].getWeek()));
+         }
+         return (<View style={style.current.week} key={id}>
+-        {week}
+-      </View>);
++            {week}
++        </View>);
+     };
+     const renderMonth = () => {
+         const shouldShowSixWeeks = showSixWeeks && !hideExtraDays;
+@@ -132,8 +135,42 @@ const Calendar = (props) => {
+         while (days.length) {
+             weeks.push(renderWeek(days.splice(0, 7), weeks.length));
+         }
+-        return <View style={style.current.monthView}>{weeks}</View>;
++        return <View style={style.current.monthView}>{weeks}</View>
+     };
++    const renderUpcomingAppointments = ({ item }) => {
++        const name = item?.serviceType?.typeOfService;
++        const desc = item?.calendarPreferenceTypeDTO?.preferenceType;
++        const link = item?.meetingLink;
++        const rescheduled = item?.rescheduled;
++        return (
++            <View style={styles.marginTop}>
++                <View style={styles.nutritionView}>
++                    <View
++                        style={styles.verticalNutritionView} />
++                    <View style={styles.paddingView}>
++                        <Text style={styles.nutritionTitle}>{name}</Text>
++                        {desc && <Text style={styles.focDescription}>{desc}</Text>}
++                        {link && <Pressable onPress={() => Linking.openURL(link)}><Text style={styles.link}>{link}</Text></Pressable>}
++                        <View style={styles.buttonRow}>
++                            <Pressable style={styles.cancelButton} onPress={() => onCancel(item)}>
++                                <Text style={styles.cancelTitle}>Cancel</Text>
++                            </Pressable>
++                            <View>
++                                {!rescheduled && (
++                                    <Pressable style={styles.rescheduleButton} onPress={() => onClickSchedule(item)}>
++                                        <Text style={styles.whiteText}>Reschedule</Text>
++                                    </Pressable>
++                                )}
++                            </View>
++                        </View>
++                    </View>
++                    <View style={styles.paddingView}>
++                        {/* <Image style={styles.imageView} source={{uri: 'https://i.picsum.photos/id/8/200/300.jpg?hmac=t2Camsbqc4OfjWMxFDwB32A8N4eu7Ido7ZV1elq4o5M'}}/> */}
++                    </View>
++                </View>
++            </View>
++        )
++    }
+     const renderHeader = () => {
+         let indicator;
+         if (currentMonth) {
+@@ -146,21 +183,118 @@ const Calendar = (props) => {
+         const ref = customHeader ? undefined : header;
+         const CustomHeader = customHeader;
+         const HeaderComponent = customHeader ? CustomHeader : CalendarHeader;
+-        return (<HeaderComponent {...headerProps} testID={testID} style={headerStyle} ref={ref} month={currentMonth} addMonth={addMonth} displayLoadingIndicator={indicator}/>);
++        return (<HeaderComponent {...headerProps} testID={testID} style={headerStyle} ref={ref} month={currentMonth} addMonth={addMonth} displayLoadingIndicator={indicator} />);
+     };
+     const GestureComponent = enableSwipeMonths ? GestureRecognizer : View;
+     const swipeProps = {
+         onSwipe: (direction) => onSwipe(direction)
+     };
+     const gestureProps = enableSwipeMonths ? swipeProps : undefined;
+-    return (<GestureComponent {...gestureProps}>
+-      <View style={[style.current.container, propsStyle]} accessibilityElementsHidden={accessibilityElementsHidden} // iOS
+-     importantForAccessibility={importantForAccessibility} // Android
+-    >
+-        {renderHeader()}
+-        {renderMonth()}
+-      </View>
+-    </GestureComponent>);
++    return (
++        isSchedule ?
++            <GestureComponent {...gestureProps}>
++                {renderHeader()}
++                {renderMonth()}
++                <View style={styles.openWeekView}>
++                    <View>
++                        <Icon name='information-circle-outline' size={20} color='gray' />
++                    </View>
++                    <View>
++                        <Text style={styles.openWeekText}>Open for 2 weeks only</Text>
++                    </View>
++                </View>
++            </GestureComponent>
++            :
++            <GestureComponent {...gestureProps}>
++                <View style={[style.current.container, propsStyle]} accessibilityElementsHidden={accessibilityElementsHidden} // iOS
++                    importantForAccessibility={importantForAccessibility} // Android
++                >
++                    {renderHeader()}
++                    {renderMonth()}
++                    <View style={styles.calendarBottomView}>
++                        <View style={styles.info}>
++                            <View style={styles.row}>
++                                <View style={styles.todays} />
++                                <Text style={styles.infoText}>{"  Today's Date"}</Text>
++                            </View>
++                            <View style={styles.row}>
++                                <View style={styles.foc} />
++                                <Text style={styles.infoText}>{' FOC Dates    '}</Text>
++                            </View>
++                            <View style={styles.row}>
++                                <View style={styles.paid} />
++                                <Text style={styles.infoText}>{'  Paid Dates    '}</Text>
++                            </View>
++                        </View>
++                        <View style={styles.info2}>
++                            <View style={styles.row}>
++                                <View style={styles.focPaid} />
++                                <Text style={styles.infoText}>{'  FOC/Paid Date'}</Text>
++                            </View>
++                            <View style={styles.row}>
++                                <View style={styles.psychoSocial} />
++                                <Text style={styles.infoText}>{'  VAS Services'}</Text>
++                            </View>
++                        </View>
++                    </View>
++                    {
++                        isExpand &&
++                        <View>
++                            {/* <View style={styles.focDateViewRow}>
++                   <LinearGradient
++                   style={styles.verticalFocView}
++                         colors={['#10389F','#4273F1']}
++                         start={{x: 0, y: 0.3}}
++                         end={{x: 0.3, y: 1}}/>
++                       <View style={styles.paddingView}>
++                              <Text style={styles.focTitle}>FOC Date</Text>
++                              <Text style={styles.focDescription}>Bendamustine (Leveact)</Text>
++                       </View>
++                       <View style={styles.paddingView}>
++                       <Image style={styles.imageView} source={{uri: 'https://i.picsum.photos/id/8/200/300.jpg?hmac=t2Camsbqc4OfjWMxFDwB32A8N4eu7Ido7ZV1elq4o5M'}}/>
++                       </View>
++                   </View> */}
++                            <FlatList
++                                data={upcomingData}
++                                renderItem={renderUpcomingAppointments}
++                                keyExtractor={(index) => `${index}`}
++                                extraData={upcomingData}
++                            />
++                            {/* <View style={styles.marginTop}>
++                   <View style={styles.psychoSocialView}>
++                   <View
++                   style={styles.verticalPhychoSocialView}/>
++                       <View style={styles.paddingView}>
++                              <Text style={styles.psychoSocialText}>Psycho-Social Counselling</Text>
++                              <Text style={styles.focDescription}>03:00 PM TO 04:00 PM</Text>
++                              <Text style={styles.link}>https://bit/y.zoom.us</Text>
++                              <View style={styles.buttonRow}>
++                           <Pressable style={styles.cancelButton} onPress={onCancel}>
++                                      <Text style={styles.cancelTitle}>cancel</Text>
++                                     </Pressable>
++                                     <View>
++                                     <Pressable style={styles.rescheduleButton} onPress={onClickSchedule}>
++                                     <Text style={styles.whiteText}>Reschedule</Text>
++                                     </Pressable>
++                                     </View>
++                              </View>
++                       </View>
++                       <View style={styles.paddingView}>
++                       <Image style={styles.imageView} source={{uri: 'https://i.picsum.photos/id/8/200/300.jpg?hmac=t2Camsbqc4OfjWMxFDwB32A8N4eu7Ido7ZV1elq4o5M'}}/>
++                       </View>
++                   </View>
++               </View> */}
++                        </View>
++                    }
++                </View>
++                <Pressable style={style.current.expandCollapse} onPress={toggleExpand}>
++                    <Icons
++                        name={isExpand ? "angle-up" : "angle-down"}
++                        size={25}
++                        style={[style.current.expandCollapseArrow, { top: isExpand ? 2 : 5 }]}
++                    /></Pressable>
++            </GestureComponent>
++    );
+ };
+ export default Calendar;
+ Calendar.displayName = 'Calendar';
+diff --git a/node_modules/react-native-calendars/src/calendar/style.js b/node_modules/react-native-calendars/src/calendar/style.js
+index c9af755..c26247f 100644
+--- a/node_modules/react-native-calendars/src/calendar/style.js
++++ b/node_modules/react-native-calendars/src/calendar/style.js
+@@ -4,25 +4,49 @@ export default function getStyle(theme = {}) {
+     const appStyle = { ...defaultStyle, ...theme };
+     return StyleSheet.create({
+         container: {
+-            paddingLeft: 5,
+-            paddingRight: 5,
+-            backgroundColor: appStyle.calendarBackground
++            backgroundColor: appStyle.calendarBackground,
++            shadowColor: '#D3D3D3',
++            shadowOpacity: 1.5,
++            shadowRadius: 8,
++            shadowOffset: {width: 2, height: 2},
++            paddingBottom: 30,
+         },
+         dayContainer: {
+             flex: 1,
+-            alignItems: 'center'
++            alignItems: 'center',
++            //marginLeft:-5
+         },
+         emptyDayContainer: {
+             flex: 1
+         },
+         monthView: {
+-            backgroundColor: appStyle.calendarBackground
++            backgroundColor: appStyle.calendarBackground,
++
+         },
+         week: {
+             marginVertical: appStyle.weekVerticalMargin,
+             flexDirection: 'row',
+-            justifyContent: 'space-around'
++            justifyContent: 'space-around',
+         },
++        expandCollapse: {
++            marginVertical: -18,
++            alignSelf: 'center',
++            alignItems: 'center',
++            width: 35,
++            height: 35,
++            backgroundColor: '#EAE0F7',
++            borderRadius: 20,
++            shadowColor: '#5F14A6',
++            shadowOpacity: 0.4,
++            shadowRadius: 8,
++            shadowOffset: {width: 2, height: 2},
++        },
++          expandCollapseArrow: {
++            position: 'absolute',
++            color: '#5F14A6',
++            alignSelf: 'center',
++            alignItems: 'center',
++          },
+         // @ts-expect-error
+         ...(theme['stylesheet.calendar.main'] || {})
+     });
+diff --git a/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/index.js b/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/index.js
+index 935c283..70453a8 100644
+--- a/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/index.js
++++ b/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/index.js
+@@ -14,6 +14,8 @@ import WeekDaysNames from '../../commons/WeekDaysNames';
+ import Week from '../week';
+ import Presenter from './presenter';
+ import constants from '../../commons/constants';
++import Icons from 'react-native-vector-icons/FontAwesome';
++
+ const NUMBER_OF_PAGES = 2; // must be a positive number
+ const applyAndroidRtlFix = constants.isAndroid && constants.isRTL;
+ /**
+@@ -106,7 +108,7 @@ class WeekCalendar extends Component {
+         const { context } = this.props;
+         const isSameWeek = sameWeek(item, context.date, firstDay);
+         const currentContext = isSameWeek ? context : undefined;
+-        return (<Week {...others} key={item} current={item} firstDay={firstDay} style={this.getWeekStyle(this.containerWidth, style)} markedDates={markedDates} onDayPress={onDayPress || this.onDayPress} context={currentContext}/>);
++        return (<Week scrollEnabled={false} {...others} key={item} current={item} firstDay={firstDay} style={this.getWeekStyle(this.containerWidth, style)} markedDates={markedDates} onDayPress={onDayPress || this.onDayPress} context={currentContext}/>);
+     };
+     getItemLayout = (_, index) => {
+         return {
+diff --git a/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/new.js b/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/new.js
+index 539c34a..0c4e8c3 100644
+--- a/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/new.js
++++ b/node_modules/react-native-calendars/src/expandableCalendar/WeekCalendar/new.js
+@@ -1,5 +1,5 @@
+ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+-import { View } from 'react-native';
++import { View, Pressable } from 'react-native';
+ import XDate from 'xdate';
+ import InfiniteList from '../../infinite-list';
+ import Week from '../week';
+@@ -11,9 +11,11 @@ import { extractComponentProps } from '../../componentUpdater';
+ import constants from '../../commons/constants';
+ import { UpdateSources } from '../commons';
+ import { sameWeek } from '../../dateutils';
++import Icons from 'react-native-vector-icons/FontAwesome';
++
+ const NUMBER_OF_PAGES = 50;
+ const WeekCalendar = (props) => {
+-    const { current, firstDay = 0, markedDates, allowShadow = true, hideDayNames, theme, calendarWidth, testID } = props;
++    const { current, firstDay = 0, markedDates, allowShadow = true, hideDayNames, theme, calendarWidth, testID, toggleExpand } = props;
+     const context = useContext(CalendarContext);
+     const { date, updateSource } = context;
+     const style = useRef(styleConstructor(theme));
+@@ -61,9 +63,16 @@ const WeekCalendar = (props) => {
+         </View>)}
+       <View>
+         <InfiniteList key="week-list" ref={list} data={items} renderItem={renderItem} reloadPages={reloadPages} onReachNearEdgeThreshold={Math.round(NUMBER_OF_PAGES * 0.4)} extendedState={extraData} style={style.current.container} initialPageIndex={NUMBER_OF_PAGES} pageHeight={48} pageWidth={containerWidth} onPageChange={onPageChange} scrollViewProps={{
+-            showsHorizontalScrollIndicator: false
++            showsHorizontalScrollIndicator: false,
++            scrollEnabled:false,
+         }}/>
+       </View>
++      <Pressable style={style.current.expandCollapse} onPress={toggleExpand}>
++      <Icons
++        name={"angle-down"}
++        size={25}
++        style={style.current.expandCollapseArrow}
++      /></Pressable>
+     </View>);
+ };
+ export default WeekCalendar;
+diff --git a/node_modules/react-native-calendars/src/expandableCalendar/style.js b/node_modules/react-native-calendars/src/expandableCalendar/style.js
+index 6a7bd3c..d9de2cb 100644
+--- a/node_modules/react-native-calendars/src/expandableCalendar/style.js
++++ b/node_modules/react-native-calendars/src/expandableCalendar/style.js
+@@ -25,7 +25,8 @@ export default function styleConstructor(theme = {}) {
+             paddingBottom: 6
+         },
+         container: {
+-            backgroundColor: appStyle.calendarBackground
++            backgroundColor: appStyle.calendarBackground,
++            marginLeft: -15,
+         },
+         knobContainer: {
+             position: 'absolute',
+@@ -85,6 +86,7 @@ export default function styleConstructor(theme = {}) {
+         },
+         monthView: {
+             backgroundColor: appStyle.calendarBackground
++
+         },
+         weekContainer: {
+             position: 'absolute',
+@@ -162,6 +164,30 @@ export default function styleConstructor(theme = {}) {
+             marginLeft: appStyle.todayButtonPosition === 'right' ? 7 : undefined,
+             marginRight: appStyle.todayButtonPosition === 'right' ? undefined : 7
+         },
++        expandCollapse: {
++            position: 'absolute', 
++            marginVertical: 68,
++            alignSelf: 'center',
++            alignItems: 'center',
++            width: 35,
++            height: 35,
++            backgroundColor: '#EAE0F7',
++            borderRadius: 20,
++            shadowColor: '#5F14A6',
++            shadowOpacity: 0.4,
++            shadowRadius: 8,
++            shadowOffset: {width: 2, height: 2},
++        },
++          expandCollapseArrow: {
++            color: '#5F14A6',
++            alignSelf: 'center',
++            alignItems: 'center',
++            top: 5
++          },
++          scheduleBottomView: {
++              flexDirection: 'row',
++              padding: 10,
++          },
+         ...(theme?.stylesheet?.expandable?.main || {})
+     });
+ }
+diff --git a/node_modules/react-native-calendars/src/infinite-list/index.js b/node_modules/react-native-calendars/src/infinite-list/index.js
+index 495b618..3fc4d2e 100644
+--- a/node_modules/react-native-calendars/src/infinite-list/index.js
++++ b/node_modules/react-native-calendars/src/infinite-list/index.js
+@@ -71,6 +71,7 @@ const InfiniteList = (props, ref) => {
+     ref={listRef} isHorizontal rowRenderer={renderItem} dataProvider={dataProvider} layoutProvider={layoutProvider.current} extendedState={extendedState} initialRenderIndex={initialPageIndex} renderAheadOffset={5 * pageWidth} onScroll={onScroll} style={style} scrollViewProps={{
+             pagingEnabled: true,
+             bounces: false,
++            scrollEnabled:false,
+             ...scrollViewProps,
+             onScrollBeginDrag,
+             onMomentumScrollEnd

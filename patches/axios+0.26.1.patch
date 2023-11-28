@@ -1,0 +1,12 @@
+diff --git a/node_modules/axios/lib/helpers/combineURLs.js b/node_modules/axios/lib/helpers/combineURLs.js
+index f1b58a5..15da7ad 100644
+--- a/node_modules/axios/lib/helpers/combineURLs.js
++++ b/node_modules/axios/lib/helpers/combineURLs.js
+@@ -9,6 +9,6 @@
+  */
+ module.exports = function combineURLs(baseURL, relativeURL) {
+   return relativeURL
+-    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
++    ? baseURL.replace(/\/+$/, '') + '' + relativeURL.replace(/^\/+/, '')
+     : baseURL;
+ };

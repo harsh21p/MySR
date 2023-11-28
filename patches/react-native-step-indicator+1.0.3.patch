@@ -1,0 +1,153 @@
+diff --git a/node_modules/react-native-step-indicator/lib/typescript/src/index.d.ts b/node_modules/react-native-step-indicator/lib/typescript/src/index.d.ts
+index b9ff83d..58a6c52 100644
+--- a/node_modules/react-native-step-indicator/lib/typescript/src/index.d.ts
++++ b/node_modules/react-native-step-indicator/lib/typescript/src/index.d.ts
+@@ -1,4 +1,4 @@
+ import React from 'react';
+ import { StepIndicatorProps } from './types';
+-declare const _default: React.MemoExoticComponent<({ currentPosition, stepCount, direction, customStyles: customStylesFromProps, labels, onPress, renderStepIndicator: renderCustomStepIndicator, renderLabel, }: StepIndicatorProps) => JSX.Element>;
++declare const _default: React.MemoExoticComponent<({ currentPosition, stepCount, direction, customStyles: customStylesFromProps, labels, onPress, renderStepIndicator: renderCustomStepIndicator, renderLabel, isGradient }: StepIndicatorProps) => JSX.Element>;
+ export default _default;
+diff --git a/node_modules/react-native-step-indicator/lib/typescript/src/types.d.ts b/node_modules/react-native-step-indicator/lib/typescript/src/types.d.ts
+index e2bc480..e13acde 100644
+--- a/node_modules/react-native-step-indicator/lib/typescript/src/types.d.ts
++++ b/node_modules/react-native-step-indicator/lib/typescript/src/types.d.ts
+@@ -211,6 +211,8 @@ export interface StepIndicatorProps {
+      * @memberof StepIndicatorProps
+      */
+     currentPosition?: number;
++
++    isGradient: boolean;
+     /**
+      * Number of steps
+      *
+diff --git a/node_modules/react-native-step-indicator/src/index.tsx b/node_modules/react-native-step-indicator/src/index.tsx
+index 222aeb6..abc1791 100644
+--- a/node_modules/react-native-step-indicator/src/index.tsx
++++ b/node_modules/react-native-step-indicator/src/index.tsx
+@@ -9,6 +9,8 @@ import {
+   ViewStyle,
+   TextStyle,
+ } from 'react-native';
++import LinearGradient from 'react-native-linear-gradient';
++import { Colors } from '../../../src/styles';
+ import { StepIndicatorProps } from './types';
+ 
+ const STEP_STATUS = {
+@@ -87,6 +89,7 @@ const StepIndicator = ({
+   onPress,
+   renderStepIndicator: renderCustomStepIndicator,
+   renderLabel,
++  isGradient= false,
+ }: StepIndicatorProps) => {
+   const [width, setWidth] = React.useState<number>(0);
+   const [height, setHeight] = React.useState<number>(0);
+@@ -363,16 +366,84 @@ const StepIndicator = ({
+     }
+ 
+     return (
+-      <Animated.View key={'step-indicator'} style={[styles.step, stepStyle]}>
+-        {renderCustomStepIndicator ? (
+-          renderCustomStepIndicator({
+-            position,
+-            stepStatus: getStepStatus(position),
+-          })
+-        ) : (
+-          <Text style={indicatorLabelStyle}>{`${position + 1}`}</Text>
+-        )}
+-      </Animated.View>
++      <View>
++      {isGradient ? <View>
++        {getStepStatus(position) === STEP_STATUS.FINISHED  && 
++        <LinearGradient
++          colors={[Colors.Text.blueGradient, Colors.Text.purpleGradient]}
++          start={{x: 0, y: 0}}
++          end={{x: 1, y: 0}}
++          style={{alignItems: 'center',
++    justifyContent: 'center',
++    zIndex: 2,borderWidth: customStyles.stepStrokeWidth,
++          borderColor: customStyles.stepStrokeFinishedColor,
++          height: customStyles.stepIndicatorSize,
++          width: customStyles.stepIndicatorSize,
++          borderRadius: customStyles.stepIndicatorSize / 2,
++          overflow: 'hidden',}}>
++          <Animated.View key={'step-indicator'} >
++            {renderCustomStepIndicator ? (
++              renderCustomStepIndicator({
++                position,
++                stepStatus: getStepStatus(position),
++              })
++            ) : (
++              <Text style={indicatorLabelStyle}>{`${position + 1}`}</Text>
++            )}
++          </Animated.View>
++      </LinearGradient> }
++      {getStepStatus(position) === STEP_STATUS.CURRENT && 
++      <LinearGradient colors={['rgba(44, 55, 193, 0.2)', 'rgba(105, 12, 160, 0.2)']}
++          start={{x: 0, y: 0}}
++          end={{x: 1, y: 0}}
++          style={{borderRadius: customStyles.stepIndicatorSize,
++          height: customStyles.stepIndicatorSize+20,
++          width: customStyles.stepIndicatorSize+20,alignItems: 'center',
++    justifyContent: 'center',}}>
++       <LinearGradient
++          colors={[Colors.Text.blueGradient, Colors.Text.purpleGradient]}
++          start={{x: 0, y: 0}}
++          end={{x: 1, y: 0}}
++          style={{alignItems: 'center',
++    justifyContent: 'center',
++    zIndex: 2,borderWidth: customStyles.stepStrokeWidth,
++          borderColor: customStyles.stepStrokeFinishedColor,
++          height: customStyles.stepIndicatorSize,
++          width: customStyles.stepIndicatorSize,
++          borderRadius: customStyles.stepIndicatorSize / 2,
++          overflow: 'hidden',}}><Animated.View key={'step-indicator'}>
++            {renderCustomStepIndicator ? (
++              renderCustomStepIndicator({
++                position,
++                stepStatus: getStepStatus(position),
++              })
++            ) : (
++              <Text style={indicatorLabelStyle}>{`${position + 1}`}</Text>
++            )}
++          </Animated.View>
++          </LinearGradient>
++          </LinearGradient>}
++      {getStepStatus(position) === STEP_STATUS.UNFINISHED && <Animated.View key={'step-indicator'} style={[styles.step, stepStyle]}>
++            {renderCustomStepIndicator ? (
++              renderCustomStepIndicator({
++                position,
++                stepStatus: getStepStatus(position),
++              })
++            ) : (
++              <Text style={indicatorLabelStyle}>{`${position + 1}`}</Text>
++            )}
++          </Animated.View>}
++      </View> : <Animated.View key={'step-indicator'} style={[styles.step, stepStyle]}>
++            {renderCustomStepIndicator ? (
++              renderCustomStepIndicator({
++                position,
++                stepStatus: getStepStatus(position),
++              })
++            ) : (
++              <Text style={indicatorLabelStyle}>{`${position + 1}`}</Text>
++            )}
++          </Animated.View>}
++          </View>
+     );
+   };
+ 
+diff --git a/node_modules/react-native-step-indicator/src/types.ts b/node_modules/react-native-step-indicator/src/types.ts
+index e7f7c06..6e5d9d4 100644
+--- a/node_modules/react-native-step-indicator/src/types.ts
++++ b/node_modules/react-native-step-indicator/src/types.ts
+@@ -249,6 +249,9 @@ export interface StepIndicatorProps {
+    */
+   currentPosition?: number;
+ 
++  /* if true, shows a gradient background*/
++  isGradient?: boolean;
++
+   /**
+    * Number of steps
+    *
