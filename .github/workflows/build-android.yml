@@ -13,19 +13,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
+      - name: Setup Node.js and Yarn
         uses: actions/setup-node@v3
         with:
-          node-version: 18.18.0  # Use the version from your local machine
-
+          node-version: 18.18.0
+      - run: npm install -g yarn@1.22.19
       - name: Install Dependencies
         run: |
-          npm install
+          yarn install
           
-      - name: Check Node.js version
+      - name: Check Node.js and Yarn version
         run: |
           node --version
-          npm --version
+          yarn --version
           npx react-native --version
           java --version
 
