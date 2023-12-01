@@ -29,6 +29,13 @@
               {
                 "client_id": "${{secrets.CLIENT_ID}}",
                 "client_type": 3
+              },
+              {
+                "client_id": "${{secrets.CLIENT_ID_IOS}}",
+                "client_type": 2,
+                "ios_info": {
+                  "bundle_id": "${{secrets.PACKAGE_NAME}}"
+                }
               }
             ]
           }
