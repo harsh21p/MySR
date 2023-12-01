@@ -20,13 +20,11 @@ export const DEFAULT_ENVIRONMENT = Envs.DEV;
 export const BaseURL = {
   DEV: {
     envName: Envs.DEV,
-    baseUrl:
-      'apiurl',
+    baseUrl: 'https://b36c-45-112-28-194.ngrok-free.app/',
   },
   QA: {
     envName: Envs.QA,
-    baseUrl:
-      'apiurl',
+    baseUrl: 'https://b36c-45-112-28-194.ngrok-free.app/',
   },
 };
 

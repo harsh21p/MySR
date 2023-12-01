@@ -44,6 +44,7 @@ const images = {
   certificate:require('./images/certificate.jpg'),
   calender:require('./images/calculator.png'),
   eyeGray:require('./images/eyeGray.png'),
+  news2:require('./images/news2.jpeg'),
   
 
 };
