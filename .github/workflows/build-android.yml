@@ -3,7 +3,7 @@ name: Build React Native Android
 on:
   push:
     branches:
-      - test/testWithSecrets
+      - main
 
 jobs:
   build:
