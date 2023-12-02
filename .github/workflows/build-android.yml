@@ -39,6 +39,30 @@ jobs:
           sed -i "s|\\\${{secrets.CLIENT_ID}}|${{secrets.CLIENT_ID}}|g" android/app/google-services.json
           sed -i "s|\\\${{secrets.CURRENT_KEY}}|${{secrets.CURRENT_KEY}}|g" android/app/google-services.json
           sed -i "s|\\\${{secrets.CLIENT_ID_IOS}}|${{secrets.CLIENT_ID_IOS}}|g" android/app/google-services.json
+
+          - name: Update Google Services JSON and AndroidManifest.xml
+  run: |
+    # Update google-services.json
+    sed -i "s|\\\${{secrets.PROJECT_NUMBER}}|${{secrets.PROJECT_NUMBER}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.PROJECT_ID}}|${{secrets.PROJECT_ID}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.STORAGE_BUCKET}}|${{secrets.STORAGE_BUCKET}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.MOBILESDK_APP_ID}}|${{secrets.MOBILESDK_APP_ID}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.PACKAGE_NAME}}|${{secrets.PACKAGE_NAME}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.CLIENT_ID}}|${{secrets.CLIENT_ID}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.CURRENT_KEY}}|${{secrets.CURRENT_KEY}}|g" android/app/google-services.json
+    sed -i "s|\\\${{secrets.CLIENT_ID_IOS}}|${{secrets.CLIENT_ID_IOS}}|g" android/app/google-services.json
+
+    # Update AndroidManifest.xml
+    sed -i "s|\\\${{secrets.API_KEY}}|${{secrets.API_KEY}}|g" android/app/src/main/AndroidManifest.xml
+
+    # Print the contents to temporary files
+    echo "$(cat android/app/google-services.json)" > /tmp/google-services-updated.json
+    echo "$(cat android/app/src/main/AndroidManifest.xml)" > /tmp/AndroidManifest-updated.xml
+
+    # Display the updated contents
+    cat /tmp/google-services-updated.json
+    cat /tmp/AndroidManifest-updated.xml
+
           
       - name: Google Services
         run: |
