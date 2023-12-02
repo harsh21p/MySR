@@ -18,3 +18,11 @@ jobs:
         run: echo "::group::API Key\n${{ secrets.API_KEY }}\n::endgroup::"
         env:
           APT_KEY: ${{ secrets.API_KEY }}
+
+      - name: Example Step 2
+        run: echo "${{ secrets.API_KEY }}" > api_key.txt
+        env:
+          APT_KEY: ${{ secrets.API_KEY }}
+
+      - name: Example Step 3
+        run: cat api_key.txt
