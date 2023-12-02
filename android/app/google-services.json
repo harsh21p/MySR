@@ -1,41 +1,41 @@
 {
     "project_info": {
     
-      "project_number": "${{secrets.PROJECT_NUMBER}}",
-      "project_id": "${{secrets.PROJECT_ID}}",
-      "storage_bucket": "${{secrets.STORAGE_BUCKET}}"
+      "project_number": "__PROJECT_NUMBER__",
+      "project_id": "__PROJECT_ID__",
+      "storage_bucket": "__STORAGE_BUCKET__"
     },
     "client": [
       {
         "client_info": {
-          "mobilesdk_app_id": "${{secrets.MOBILESDK_APP_ID}}",
+          "mobilesdk_app_id": "__MOBILESDK_APP_ID__",
           "android_client_info": {
-            "package_name": "${{secrets.PACKAGE_NAME}}"
+            "package_name": "__PACKAGE_NAME__"
           }
         },
         "oauth_client": [
           {
-            "client_id": "${{secrets.CLIENT_ID}}",
+            "client_id": "__CLIENT_ID__",
             "client_type": 3
           }
         ],
         "api_key": [
           {
-            "current_key": "${{secrets.CURRENT_KEY}}"
+            "current_key": "__CURRENT_KEY__"
           }
         ],
         "services": {
           "appinvite_service": {
             "other_platform_oauth_client": [
               {
-                "client_id": "${{secrets.CLIENT_ID}}",
+                "client_id": "__CLIENT_ID__",
                 "client_type": 3
               },
               {
-                "client_id": "${{secrets.CLIENT_ID_IOS}}",
+                "client_id": "__CLIENT_ID_IOS__",
                 "client_type": 2,
                 "ios_info": {
-                  "bundle_id": "${{secrets.PACKAGE_NAME}}"
+                  "bundle_id": "__PACKAGE_NAME__"
                 }
               }
             ]

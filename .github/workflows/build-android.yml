@@ -12,55 +12,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Your other steps..
-      - name: Create google-services.json
+      - name: Upadte google-services.json
         run: |
-          echo '{
-            "project_info": {
-              "project_number": "${{ secrets.PROJECT_NUMBER }}",
-              "project_id": "${{ secrets.PROJECT_ID }}",
-              "storage_bucket": "${{ secrets.STORAGE_BUCKET }}"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "${{ secrets.MOBILESDK_APP_ID }}",
-                  "android_client_info": {
-                    "package_name": "${{ secrets.PACKAGE_NAME }}"
-                  }
-                },
-                "oauth_client": [
-                  {
-                    "client_id": "${{ secrets.CLIENT_ID }}",
-                    "client_type": 3
-                  }
-                ],
-                "api_key": [
-                  {
-                    "current_key": "${{ secrets.CURRENT_KEY }}"
-                  }
-                ],
-                "services": {
-                  "appinvite_service": {
-                    "other_platform_oauth_client": [
-                      {
-                        "client_id": "${{ secrets.CLIENT_ID }}",
-                        "client_type": 3
-                      },
-                      {
-                        "client_id": "${{ secrets.CLIENT_ID_IOS }}",
-                        "client_type": 2,
-                        "ios_info": {
-                          "bundle_id": "${{ secrets.PACKAGE_NAME }}"
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            "configuration_version": "1"
-          }' > android/app/google-services.json
+          PROJECT_NUMBER="${{ secrets.PROJECT_NUMBER }}"
+          PROJECT_ID="${{ secrets.PROJECT_ID }}"
+          STORAGE_BUCKET="${{ secrets.STORAGE_BUCKET }}"
+          MOBILESDK_APP_ID="${{ secrets.MOBILESDK_APP_ID }}"
+          PACKAGE_NAME="${{ secrets.PACKAGE_NAME }}"
+          CLIENT_ID="${{ secrets.CLIENT_ID }}"
+          CURRENT_KEY="${{ secrets.CURRENT_KEY }}"
+          CLIENT_ID_IOS="${{ secrets.CLIENT_ID_IOS }}"
+
+          JSON_FILE="android/app/google-services.json"
+
+          sed -i "s|__PROJECT_NUMBER__|${PROJECT_NUMBER}|g" $JSON_FILE
+          sed -i "s|__PROJECT_ID__|${PROJECT_ID}|g" $JSON_FILE
+          sed -i "s|__STORAGE_BUCKET__|${STORAGE_BUCKET}|g" $JSON_FILE
+          sed -i "s|__MOBILESDK_APP_ID__|${MOBILESDK_APP_ID}|g" $JSON_FILE
+          sed -i "s|__PACKAGE_NAME__|${PACKAGE_NAME}|g" $JSON_FILE
+          sed -i "s|__CLIENT_ID__|${CLIENT_ID}|g" $JSON_FILE
+          sed -i "s|__CURRENT_KEY__|${CURRENT_KEY}|g" $JSON_FILE
+          sed -i "s|__CLIENT_ID_IOS__|${CLIENT_ID_IOS}|g" $JSON_FILE
         env:
           PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
@@ -71,7 +43,7 @@ jobs:
           CURRENT_KEY: ${{ secrets.CURRENT_KEY }}
           CLIENT_ID_IOS: ${{ secrets.CLIENT_ID_IOS }}
 
-      - name: Create google-services.json
+      - name: Upadte AndroidManifest.xml
         run: |
           API_KEY="${{ secrets.API_KEY }}"
           MANIFEST_FILE="android/app/src/main/AndroidManifest.xml"
@@ -80,13 +52,10 @@ jobs:
         env:
           API_KEY: ${{ secrets.API_KEY }}
 
-      - name: Print API Key from file
+      - name: Print AndroidManifest.xml file
         run: cat android/app/src/main/AndroidManifest.xml
 
-      - name: Upload API Key artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: api_key
-          path: android/app/src/main/AndroidManifest.xml
+      - name: Print google-services.json file
+        run: cat android/app/google-services.json
 
       
