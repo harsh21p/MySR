@@ -4,34 +4,15 @@ on:
   push:
     branches:
       - test/testWithSecrets
-
 jobs:
-  print_sections:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
+      # Your other steps...
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Print Section 1
-      run: echo "::group::Section 1\nThis is the content of Section 1\nAPI Key: ${{ secrets.API_KEY }}\n::endgroup::"
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
-
-    - name: Print Section 2
-      run: echo "::group::Section 2\nThis is the content of Section 2\nAPI Key: ${{ secrets.API_KEY }}\n::endgroup::"
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
-
-    - name: Print Section 3
-      run: echo "::group::Section 3\nThis is the content of Section 3\nAPI Key: ${{ secrets.API_KEY }}\n::endgroup::"
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
+      - name: Example Step
+        run: echo "Hello, world!"
