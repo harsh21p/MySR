@@ -16,3 +16,5 @@ jobs:
 
       - name: Example Step
         run: echo "::group::API Key\n${{ secrets.API_KEY }}\n::endgroup::"
+        env:
+          APT_KEY: ${{ secrets.API_KEY }}
