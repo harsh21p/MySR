@@ -64,7 +64,7 @@ jobs:
           FILE="src/context/use-environment.tsx"
           sed -i "s|__API_URL__|${URL}|g" $FILE
         env:
-          API_KEY: ${{ secrets.URL }}
+          URL: ${{ secrets.URL }}
 
       - name: Update AndroidManifest.xml
         run: |
