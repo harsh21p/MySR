@@ -20,41 +20,41 @@ jobs:
         run: |
           echo '{
             "project_info": {
-              "project_number": "${PROJECT_NUMBER}",
-              "project_id": "${PROJECT_ID}",
-              "storage_bucket": "${STORAGE_BUCKET}"
+              "project_number": "${{ secrets.PROJECT_NUMBER }}",
+              "project_id": "${{ secrets.PROJECT_ID }}",
+              "storage_bucket": "${{ secrets.STORAGE_BUCKET }}"
             },
             "client": [
               {
                 "client_info": {
-                  "mobilesdk_app_id": "${MOBILESDK_APP_ID}",
+                  "mobilesdk_app_id": "${{ secrets.MOBILESDK_APP_ID }}",
                   "android_client_info": {
-                    "package_name": "${PACKAGE_NAME}"
+                    "package_name": "${{ secrets.PACKAGE_NAME }}"
                   }
                 },
                 "oauth_client": [
                   {
-                    "client_id": "${CLIENT_ID}",
+                    "client_id": "${{ secrets.CLIENT_ID }}",
                     "client_type": 3
                   }
                 ],
                 "api_key": [
                   {
-                    "current_key": "${CURRENT_KEY}"
+                    "current_key": "${{ secrets.CURRENT_KEY }}"
                   }
                 ],
                 "services": {
                   "appinvite_service": {
                     "other_platform_oauth_client": [
                       {
-                        "client_id": "${CLIENT_ID}",
+                        "client_id": "${{ secrets.CLIENT_ID }}",
                         "client_type": 3
                       },
                       {
-                        "client_id": "${CLIENT_ID_IOS}",
+                        "client_id": "${{ secrets.CLIENT_ID_IOS }}",
                         "client_type": 2,
                         "ios_info": {
-                          "bundle_id": "${PACKAGE_NAME}"
+                          "bundle_id": "${{ secrets.PACKAGE_NAME }}"
                         }
                       }
                     ]
