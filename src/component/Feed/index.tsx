@@ -11,14 +11,11 @@ import {clearProfile} from 'routes/MyAccount/slice';
 import {useAuthContext} from 'context/use-auth-context';
 import SVGIcon from '../../component/SVGIcon';
 import icons from 'assets/icons';
+import BannerComponent from '../../component/BannerComponent';
 
 const Feed = ({type, dataNearby}: any): JSX.Element => {
   const dispatch = useAppDispatch();
-  interface News {
-    image: any;
-    title: string;
-    subTitle: string;
-  }
+
   const {authData} = useAuthContext();
 
   const dataBlog = [
@@ -48,18 +45,32 @@ const Feed = ({type, dataNearby}: any): JSX.Element => {
     },
   ];
 
-  const [item, setItem] = useState<News>();
+  // const [item, setItem] = useState<News>();
 
-  var x: News = {
-    image: images.news,
-    title: 'Uttarkashi tunnel collapse',
-    subTitle:
-      'The rescue operation is in final stages and trapped workers in Silkyara Tunnel will be out in...',
-  };
+  var newsData = [
+    {
+      image: images.news,
+      title: 'Uttarkashi tunnel collapse',
+      subTitle:
+        'The rescue operation is in final stages and trapped workers in Silkyara Tunnel will be out in...',
+    },
+    {
+      image: images.news2,
+      title: 'Firefighters, army douse',
+      subTitle:
+        'Firefighters and army personnel have extinguished a fire that ripped through a...',
+    },
+    {
+      image: images.blog2,
+      title: 'This is test news',
+      subTitle:
+        'Test news and army personnel have extinguished a fire that ripped through a...',
+    },
+  ];
 
-  useEffect(() => {
-    setItem(x);
-  }, []);
+  // useEffect(() => {
+  // setItem(newsData);
+  // }, []);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollMain}>
@@ -81,6 +92,7 @@ const Feed = ({type, dataNearby}: any): JSX.Element => {
               data={dataNearby}
               horizontal={true}
               style={styles.scrollNearby}
+              ListFooterComponent={<View style={{width: 20}}></View>}
               renderItem={({item}) => (
                 <Pressable
                   style={styles.nHolder}
@@ -131,7 +143,7 @@ const Feed = ({type, dataNearby}: any): JSX.Element => {
         <>
           <Text style={styles.feedTitleOne}>News</Text>
 
-          <View style={styles.nHolderNews}>
+          {/* <View style={styles.nHolderNews}>
             <View style={styles.nNHolder}>
               <Image
                 source={item?.image}
@@ -145,46 +157,16 @@ const Feed = ({type, dataNearby}: any): JSX.Element => {
                 <Text style={styles.newsSubTitle}>{item?.subTitle}</Text>
               </LinearGradient>
             </View>
-          </View>
+          </View> */}
 
-          <View
-            style={{
-              flexDirection: 'row',
-              alignSelf: 'center',
-              marginBottom: 30,
-              marginTop: 11,
-            }}>
-            <View
-              style={{
-                width: 11,
-                height: 11,
-                borderRadius: 11,
-                backgroundColor: Colors.Button.primary,
-              }}
-            />
-            <View
-              style={{
-                width: 11,
-                height: 11,
-                borderRadius: 11,
-                backgroundColor: Colors.Button.primary,
-                marginHorizontal: 5,
-              }}
-            />
-            <View
-              style={{
-                width: 21,
-                height: 11,
-                borderRadius: 11,
-                backgroundColor: Colors.Text.blue,
-              }}
-            />
-          </View>
+          <BannerComponent data={newsData} />
+
           <Text style={styles.feedTitleOne}>Blogs posted</Text>
           <FlatList
             data={dataBlog}
             horizontal={true}
             style={styles.scrollNearby}
+            ListFooterComponent={<View style={{width: 20}}></View>}
             renderItem={({item}) => (
               <View style={styles.blogView}>
                 <Image

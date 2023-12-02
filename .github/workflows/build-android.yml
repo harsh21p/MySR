@@ -1,0 +1,81 @@
+name: Build React Native Android
+
+on:
+  push:
+    branches:
+      - test/testWithSecrets
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.18.0
+      - run: npm install -g yarn@1.22.19
+      - name: Install Dependencies
+        run: |
+          yarn install
+      - name: Update google-services.json
+        run: |
+          PROJECT_NUMBER="${{ secrets.PROJECT_NUMBER }}"
+          PROJECT_ID="${{ secrets.PROJECT_ID }}"
+          STORAGE_BUCKET="${{ secrets.STORAGE_BUCKET }}"
+          MOBILESDK_APP_ID="${{ secrets.MOBILESDK_APP_ID }}"
+          PACKAGE_NAME="${{ secrets.PACKAGE_NAME }}"
+          CLIENT_ID="${{ secrets.CLIENT_ID }}"
+          CURRENT_KEY="${{ secrets.CURRENT_KEY }}"
+          CLIENT_ID_IOS="${{ secrets.CLIENT_ID_IOS }}"
+          JSON_FILE="android/app/google-services.json"
+          sed -i "s|__PROJECT_NUMBER__|${PROJECT_NUMBER}|g" $JSON_FILE
+          sed -i "s|__PROJECT_ID__|${PROJECT_ID}|g" $JSON_FILE
+          sed -i "s|__STORAGE_BUCKET__|${STORAGE_BUCKET}|g" $JSON_FILE
+          sed -i "s|__MOBILESDK_APP_ID__|${MOBILESDK_APP_ID}|g" $JSON_FILE
+          sed -i "s|__PACKAGE_NAME__|${PACKAGE_NAME}|g" $JSON_FILE
+          sed -i "s|__CLIENT_ID__|${CLIENT_ID}|g" $JSON_FILE
+          sed -i "s|__CURRENT_KEY__|${CURRENT_KEY}|g" $JSON_FILE
+          sed -i "s|__CLIENT_ID_IOS__|${CLIENT_ID_IOS}|g" $JSON_FILE
+        env:
+          PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+          MOBILESDK_APP_ID: ${{ secrets.MOBILESDK_APP_ID }}
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CURRENT_KEY: ${{ secrets.CURRENT_KEY }}
+          CLIENT_ID_IOS: ${{ secrets.CLIENT_ID_IOS }}
+
+      - name: Update AndroidManifest.xml
+        run: |
+          API_KEY="${{ secrets.API_KEY }}"
+          MANIFEST_FILE="android/app/src/main/AndroidManifest.xml"
+          sed -i "s|__API_KEY__|${API_KEY}|g" $MANIFEST_FILE
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+
+      - name: Update AndroidManifest.xml
+        run: |
+          KEY="try {retriever.release();}catch (Exception e){}"
+          FILE="node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java"
+          sed -i "s|retriever.release();|${KEY}|g" $FILE
+      - name: Build Android
+        run: |
+          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew clean
+          ./gradlew assembleRelease
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: android/app/build/outputs/apk/release/app-release.apk
