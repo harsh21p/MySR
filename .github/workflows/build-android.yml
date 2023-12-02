@@ -13,74 +13,25 @@ jobs:
         uses: actions/checkout@v2
 
       # Your other steps..
-
-      
-
       - name: Create google-services.json
-        run: |
-          echo '{
-            "project_info": {
-              "project_number": "${{ secrets.PROJECT_NUMBER }}",
-              "project_id": "${{ secrets.PROJECT_ID }}",
-              "storage_bucket": "${{ secrets.STORAGE_BUCKET }}"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "${{ secrets.MOBILESDK_APP_ID }}",
-                  "android_client_info": {
-                    "package_name": "${{ secrets.PACKAGE_NAME }}"
-                  }
-                },
-                "oauth_client": [
-                  {
-                    "client_id": "${{ secrets.CLIENT_ID }}",
-                    "client_type": 3
-                  }
-                ],
-                "api_key": [
-                  {
-                    "current_key": "${{ secrets.CURRENT_KEY }}"
-                  }
-                ],
-                "services": {
-                  "appinvite_service": {
-                    "other_platform_oauth_client": [
-                      {
-                        "client_id": "${{ secrets.CLIENT_ID }}",
-                        "client_type": 3
-                      },
-                      {
-                        "client_id": "${{ secrets.CLIENT_ID_IOS }}",
-                        "client_type": 2,
-                        "ios_info": {
-                          "bundle_id": "${{ secrets.PACKAGE_NAME }}"
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            "configuration_version": "1"
-          }' > android/app/google-services.json
+        run: cat android/app/src/main/AndroidManifest.xml
         env:
-          PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
-          MOBILESDK_APP_ID: ${{ secrets.MOBILESDK_APP_ID }}
-          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CURRENT_KEY: ${{ secrets.CURRENT_KEY }}
-          CLIENT_ID_IOS: ${{ secrets.CLIENT_ID_IOS }}
+          API_KEY: ${{ secrets.API_KEY }}
+          # PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          # STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+          # MOBILESDK_APP_ID: ${{ secrets.MOBILESDK_APP_ID }}
+          # PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          # CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          # CURRENT_KEY: ${{ secrets.CURRENT_KEY }}
+          # CLIENT_ID_IOS: ${{ secrets.CLIENT_ID_IOS }}
 
-      - name: Print API Key from file
-        run: cat android/app/google-services.json
+      # - name: Print API Key from file
+      #   run: cat android/app/google-services.json
 
-      - name: Upload API Key artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: api_key
-          path: android/app/google-services.json
+      # - name: Upload API Key artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: api_key
+      #     path: android/app/google-services.json
 
       
