@@ -1,8 +1,8 @@
 {
     "project_info": {
-      "project_number": "${{secrets.PROJECT_NUMBER}}",
-      "project_id": "${{secrets.PROJECT_ID}}",
-      "storage_bucket": "${{secrets.STORAGE_BUCKET}}"
+      "project_number": "$secrets.PROJECT_NUMBER",
+      "project_id": "{{secrets.PROJECT_ID}}",
+      "storage_bucket": $secrets.STORAGE_BUCKET
     },
     "client": [
       {
