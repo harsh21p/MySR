@@ -77,6 +77,8 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew clean
+          rm -rf ./android/app/src/main/res/drawable-*
+          rm -rf ./android/app/src/main/res/raw
           ./gradlew assembleRelease
           
       - name: Upload Artifact
