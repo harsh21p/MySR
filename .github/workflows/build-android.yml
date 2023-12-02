@@ -1,6 +1,9 @@
-name: Print Sections
+name: Build React Native Android
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - test/testWithSecrets
 
 jobs:
   print_sections:
