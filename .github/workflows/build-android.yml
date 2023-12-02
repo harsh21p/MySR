@@ -29,6 +29,17 @@ jobs:
           npx react-native --version
           java --version
 
+      - name: Update Google Services JSON
+        run: |
+          sed -i "s|\\\${{secrets.PROJECT_NUMBER}}|${{secrets.PROJECT_NUMBER}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.PROJECT_ID}}|${{secrets.PROJECT_ID}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.STORAGE_BUCKET}}|${{secrets.STORAGE_BUCKET}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.MOBILESDK_APP_ID}}|${{secrets.MOBILESDK_APP_ID}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.PACKAGE_NAME}}|${{secrets.PACKAGE_NAME}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.CLIENT_ID}}|${{secrets.CLIENT_ID}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.CURRENT_KEY}}|${{secrets.CURRENT_KEY}}|g" android/app/google-services.json
+          sed -i "s|\\\${{secrets.CLIENT_ID_IOS}}|${{secrets.CLIENT_ID_IOS}}|g" android/app/google-services.json
+          
       - name: Google Services
         run: |
           cat android/app/google-services.json 
