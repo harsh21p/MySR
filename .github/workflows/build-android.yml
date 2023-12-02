@@ -22,7 +22,7 @@ jobs:
         run: |
           yarn install
 
-      - name: Upadte google-services.json
+      - name: Update google-services.json
         run: |
           PROJECT_NUMBER="${{ secrets.PROJECT_NUMBER }}"
           PROJECT_ID="${{ secrets.PROJECT_ID }}"
@@ -53,7 +53,7 @@ jobs:
           CURRENT_KEY: ${{ secrets.CURRENT_KEY }}
           CLIENT_ID_IOS: ${{ secrets.CLIENT_ID_IOS }}
 
-      - name: Upadte AndroidManifest.xml
+      - name: Update AndroidManifest.xml
         run: |
           API_KEY="${{ secrets.API_KEY }}"
           MANIFEST_FILE="android/app/src/main/AndroidManifest.xml"
@@ -67,6 +67,10 @@ jobs:
 
       # - name: Print google-services.json file
       #   run: cat android/app/google-services.json
+
+      - name: Use Gradle 7.3.3
+        run: |
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-7.3.3-all.zip" > gradle/wrapper/gradle-wrapper.properties
       
       - name: Build Android
         run: |
