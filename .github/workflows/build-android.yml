@@ -14,21 +14,73 @@ jobs:
 
       # Your other steps..
 
-      - name: Example Step
-        run: echo "::group::API Key\n${{ secrets.API_KEY }}\n::endgroup::"
-        env:
-          APT_KEY: ${{ secrets.API_KEY }}
-
-      - name: Example Step 2
-        run: echo "${{ secrets.API_KEY }}" > api_key.txt
-        env:
-          APT_KEY: ${{ secrets.API_KEY }}
-
-      - name: Example Step 3
-        run: cat api_key.txt
       
+
+      - name: Create google-services.json
+        run: |
+          echo '{
+            "project_info": {
+              "project_number": "${PROJECT_NUMBER}",
+              "project_id": "${PROJECT_ID}",
+              "storage_bucket": "${STORAGE_BUCKET}"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "${MOBILESDK_APP_ID}",
+                  "android_client_info": {
+                    "package_name": "${PACKAGE_NAME}"
+                  }
+                },
+                "oauth_client": [
+                  {
+                    "client_id": "${CLIENT_ID}",
+                    "client_type": 3
+                  }
+                ],
+                "api_key": [
+                  {
+                    "current_key": "${CURRENT_KEY}"
+                  }
+                ],
+                "services": {
+                  "appinvite_service": {
+                    "other_platform_oauth_client": [
+                      {
+                        "client_id": "${CLIENT_ID}",
+                        "client_type": 3
+                      },
+                      {
+                        "client_id": "${CLIENT_ID_IOS}",
+                        "client_type": 2,
+                        "ios_info": {
+                          "bundle_id": "${PACKAGE_NAME}"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }' > android/app/google-services.json
+        env:
+          PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+          MOBILESDK_APP_ID: ${{ secrets.MOBILESDK_APP_ID }}
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CURRENT_KEY: ${{ secrets.CURRENT_KEY }}
+          CLIENT_ID_IOS: ${{ secrets.CLIENT_ID_IOS }}
+
+      - name: Print API Key from file
+        run: cat android/app/google-services.json
+
       - name: Upload API Key artifact
         uses: actions/upload-artifact@v2
         with:
           name: api_key
-          path: api_key.txt
+          path: android/app/google-services.json
+
+      
