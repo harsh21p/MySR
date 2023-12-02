@@ -69,7 +69,6 @@ jobs:
       - name: Build APK
         run: |
           cd android
-          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.0-bin.zip" > gradle/wrapper/gradle-wrapper.properties
           chmod +x gradlew
           ./gradlew assembleRelease
           
