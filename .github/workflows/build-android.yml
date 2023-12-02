@@ -26,3 +26,9 @@ jobs:
 
       - name: Example Step 3
         run: cat api_key.txt
+      
+      - name: Upload API Key artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: api_key
+          path: api_key.txt
