@@ -46,6 +46,8 @@ npm-debug.log
 buck-out/
 \.buckd/
 *.keystore
+*.keystore
+!my-release-key.keystore
 !debug.keystore
 
 # Bundler (Ruby dependencies)

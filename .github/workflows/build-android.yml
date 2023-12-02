@@ -77,8 +77,6 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew clean
-          ./gradlew bundleRelease
-          rm -rf app/build/generated
           ./gradlew assembleRelease
           
       - name: Upload Artifact
