@@ -66,7 +66,7 @@ jobs:
         run: |
           KEY="try {retriever.release();}catch (Exception e){}"
           FILE="node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java"
-          sed -i "s|retriever.release();|${KEY}|g" $FILE2
+          sed -i "s|retriever.release();|${KEY}|g" $FILE
 
       - name: Build Android
         run: |
