@@ -73,8 +73,10 @@ jobs:
 
       - name: Create google-services.json
         run: |
-          sed -e "s|\${{ secrets.API_KEY }}|${{ secrets.API_KEY }}|g" android/app/src/main/AndroidManifest.xml > android/app/src/main/AndroidManifest_temp.xml
-          mv android/app/src/main/AndroidManifest_temp.xml android/app/src/main/AndroidManifest.xml
+          API_KEY="${{ secrets.API_KEY }}"
+          MANIFEST_FILE="android/app/src/main/AndroidManifest.xml"
+
+          sed -i "s|__API_KEY__|${API_KEY}|g" $MANIFEST_FILE
         env:
           API_KEY: ${{ secrets.API_KEY }}
 
