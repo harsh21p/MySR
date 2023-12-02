@@ -4,13 +4,23 @@ on:
   push:
     branches:
       - test/testWithSecrets
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Setup Node.js and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.18.0
+      - run: npm install -g yarn@1.22.19
+      - name: Install Dependencies
+        run: |
+          yarn install
 
       - name: Upadte google-services.json
         run: |
@@ -52,10 +62,26 @@ jobs:
         env:
           API_KEY: ${{ secrets.API_KEY }}
 
-      - name: Print AndroidManifest.xml file
-        run: cat android/app/src/main/AndroidManifest.xml
+      # - name: Print AndroidManifest.xml file
+      #   run: cat android/app/src/main/AndroidManifest.xml
 
-      - name: Print google-services.json file
-        run: cat android/app/google-services.json
+      # - name: Print google-services.json file
+      #   run: cat android/app/google-services.json
+      
+      - name: Build Android
+        run: |
+          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: android/app/build/outputs/apk/release/app-release.apk
 
       
