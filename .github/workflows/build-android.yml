@@ -13,11 +13,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Firebase
-        uses: w9jds/firebase-action@v2
-        with:
-          args: appdistribution:token --token "$FIREBASE_SERVICE_ACCOUNT_KEY"
-
       - name: Setup Node.js and Yarn
         uses: actions/setup-node@v3
         with:
