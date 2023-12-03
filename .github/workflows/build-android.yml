@@ -87,8 +87,11 @@ jobs:
           ./gradlew clean
           ./gradlew assembleRelease
           
-      - name: Upload Artifact
-        run: |
-            firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk --app ${{ secrets.MOBILESDK_APP_ID }}
-        env:
-          URL: ${{ secrets.MOBILESDK_APP_ID }}
+      - name: Upload Artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FD_PROJECT_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: testers
+          file: android/app/build/outputs/apk/release/app-release.apk
+          releaseNotes: "New update"
