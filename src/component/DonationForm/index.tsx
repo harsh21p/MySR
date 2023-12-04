@@ -197,7 +197,15 @@ export const DonationForm = ({
         selectedDeliveryType?.selectedType !== undefined &&
         selectedDeliveryType?.selectedType !== 0 &&
         myDate !== '' &&
-        myDate !== undefined)
+        myDate !== undefined &&
+        description !== undefined &&
+        description !== '' &&
+        selectedDonationType?.selectedType !== undefined &&
+        selectedDonationType?.selectedQuantity !== undefined &&
+        selectedDonationType?.selectedUnit !== undefined &&
+        selectedDonationType?.selectedType !== '' &&
+        selectedDonationType?.selectedQuantity !== '' &&
+        selectedDonationType?.selectedUnit !== '')
     ) {
       const payload = {
         userId: authData?.userId,
@@ -244,7 +252,6 @@ export const DonationForm = ({
     };
     dispatch(callUpdateDonation(payload));
   };
-
 
   return (
     <View style={type === undefined ? styles.scroll : {}}>
