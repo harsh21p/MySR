@@ -1,8 +1,27 @@
 import {Platform, StyleSheet} from 'react-native';
 import {Colors, Spacing} from '../../style';
-import { hp, wp } from 'utils/commonFunctions';
+import {hp, wp} from 'utils/commonFunctions';
 
 const styles = StyleSheet.create({
+  notFound: {
+    alignSelf: 'center',
+    alignContent: 'center',
+    fontSize: 17,
+    fontFamily: 'Poppins-Medium',
+    color: Colors.Text.primary,
+  },
+  donateNowEl: {
+    alignSelf: 'center',
+    height: 200,
+    flex: 1,
+  },
+  innerView: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    height: 200,
+    paddingVertical: 20,
+  },
   card: {
     backgroundColor:
       Platform.OS === 'ios'

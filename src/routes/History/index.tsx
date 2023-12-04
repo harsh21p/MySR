@@ -70,6 +70,8 @@ import CameraRoll from '@react-native-community/cameraroll';
 import { callSendNotificationByUserId } from 'routes/Dashboard/slice/sendNotificationByUserId';
 import { callSendNotificationByNgoId } from 'routes/Dashboard/slice/sendNotificationByNgoId';
 import { getProfileInfo } from 'routes/MyAccount/slice';
+import SVGIcon from '../../component/SVGIcon';
+import icons from '../../assets/icons';
 
 const HistoryClick = ({
   item,
@@ -753,6 +755,16 @@ const History = () => {
             <FlatList
               showsVerticalScrollIndicator={false}
               data={dataOfDonation}
+              ListEmptyComponent={
+                <View style={styles.innerView}>
+                  <SVGIcon
+                    style={styles.donateNowEl}
+                    icon={icons.notFound}
+                    key={'icon'}
+                  />
+                  <Text style={styles.notFound}>Not found</Text>
+                </View>
+              }
               style={styles.padding}
               renderItem={({item}) => (
                 <RequestComp

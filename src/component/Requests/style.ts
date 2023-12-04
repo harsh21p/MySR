@@ -7,6 +7,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 215,
   },
+  notFound:{
+    alignSelf: 'center',
+    alignContent: 'center',
+    fontSize: 17,
+    fontFamily: 'Poppins-Medium',
+    color: Colors.Text.primary,
+  },
   donateNowEl: {
     alignSelf: 'center',
     height: 200,
