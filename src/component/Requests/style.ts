@@ -5,8 +5,19 @@ const styles = StyleSheet.create({
   mainContainer: {
     paddingHorizontal: 10,
     flex: 1,
-    paddingBottom: 215
-
+    paddingBottom: 215,
+  },
+  donateNowEl: {
+    alignSelf: 'center',
+    height: 200,
+    flex: 1,
+  },
+  innerView: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    height: 200,
+    paddingVertical: 20,
   },
   card: {
     backgroundColor:

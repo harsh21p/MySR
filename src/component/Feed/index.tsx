@@ -62,16 +62,12 @@ const Feed = ({type, dataNearby}: any): JSX.Element => {
     },
     {
       image: images.blog2,
-      title: 'This is test news',
+      title: 'COVID-19 virus may survive',
       subTitle:
-        'Test news and army personnel have extinguished a fire that ripped through a...',
+        'The length of time the COVID-19 virus may survive on foods was revealed by a study...',
     },
   ];
-
-  // useEffect(() => {
-  // setItem(newsData);
-  // }, []);
-
+  
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollMain}>
       <View style={styles.scroll}>

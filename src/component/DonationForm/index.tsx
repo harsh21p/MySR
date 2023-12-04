@@ -28,31 +28,43 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import dayjs from 'dayjs';
 import DatePicker from 'react-native-date-picker';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import { getAddressInfo } from 'routes/AddAddress/slice/getAddresses';
-import {callUpdateDonation, updateDonationClear, updateDonationInfo} from 'routes/Dashboard/slice/updateDonation';
+import {getAddressInfo} from 'routes/AddAddress/slice/getAddresses';
+import {
+  callUpdateDonation,
+  updateDonationClear,
+  updateDonationInfo,
+} from 'routes/Dashboard/slice/updateDonation';
 import {useAuthContext} from 'context/use-auth-context';
-import { callGetDonation } from 'routes/Dashboard/slice/GetDonations';
-import { callSendNotificationByNgoId } from 'routes/Dashboard/slice/sendNotificationByNgoId';
-import { getProfileInfo } from 'routes/MyAccount/slice';
-import { callSendNotificationByUserId } from 'routes/Dashboard/slice/sendNotificationByUserId';
+import {callGetDonation} from 'routes/Dashboard/slice/GetDonations';
+import {callSendNotificationByNgoId} from 'routes/Dashboard/slice/sendNotificationByNgoId';
+import {getProfileInfo} from 'routes/MyAccount/slice';
+import {callSendNotificationByUserId} from 'routes/Dashboard/slice/sendNotificationByUserId';
 
 export const DonationForm = ({
   type = undefined,
   item = undefined,
   latPrimary,
   longPrimary,
-  close = ()=>{},}: any) => {
+  close = () => {},
+}: any) => {
   const [selectedDonationType, setSelectedDonationType] = useState();
-  const [selectedDeliveryType, setSelectedDeliveryType] = useState(item && item.deliveryType);
+  const [selectedDeliveryType, setSelectedDeliveryType] = useState(
+    item && item.deliveryType,
+  );
   const [selectedNgos, setSelectedNgos] = useState(item && item.ngoDetails);
-  const [selectedAddress, setSelectedAddress] = useState(item && item.addressId);
+  const [selectedAddress, setSelectedAddress] = useState(
+    item && item.addressId,
+  );
   const [fullName, setFullName] = useState(item && item.fullName);
-  const [contactNumber, setContactNumber] = useState(item && item.contactNumber);
+  const [contactNumber, setContactNumber] = useState(
+    item && item.contactNumber,
+  );
   const [description, setDescription] = useState(item && item.description);
   const {authData} = useAuthContext();
   const dispatch = useAppDispatch();
-  const {isAddDonationLoading, addDonationSuccess, addDonationError} = useAppSelector(addDonationInfo);
-  const [myDate, setDate] = useState(item ? item.deliveryTime: new Date());
+  const {isAddDonationLoading, addDonationSuccess, addDonationError} =
+    useAppSelector(addDonationInfo);
+  const [myDate, setDate] = useState(item ? item.deliveryTime : new Date());
   const [openPicker, setOpenPicker] = useState(false);
 
   const changeSelectedDate = selectedDate => {
@@ -60,7 +72,7 @@ export const DonationForm = ({
     const formatedDate = dayjs(currentDate).format('YYYY-MM-DD hh:mm A');
     setDate(formatedDate);
     setOpenPicker(false);
-  }
+  };
 
   const [lat, setLat] = useState(latPrimary);
   const [long, setLong] = useState(longPrimary);
@@ -86,74 +98,107 @@ export const DonationForm = ({
       id: authData?.userId,
     };
     dispatch(callGetDonation(payload));
-  }
+  };
 
-  function sendNotificationByNgoId(ngoId:string,title:string,body:string) {
+  function sendNotificationByNgoId(ngoId: string, title: string, body: string) {
     const payload = {
       jwt: authData?.jwt,
-      data:{
-        ngoId : ngoId,
-        title : title,
-        body : body
-      }
+      data: {
+        ngoId: ngoId,
+        title: title,
+        body: body,
+      },
     };
     dispatch(callSendNotificationByNgoId(payload));
   }
 
   ///////////////////////// API CALL /////////////////////////////
 
-    const {isAddressLoading,getAddressSuccess} = useAppSelector(getAddressInfo);
-  
-    const {updateDonationSuccess, updateDonationError, isUpdateLoading} = useAppSelector(updateDonationInfo);
-    const {isProfileLoading,profileSuccess} = useAppSelector(getProfileInfo);
+  const {isAddressLoading, getAddressSuccess} = useAppSelector(getAddressInfo);
 
-    function sendNotificationByUserId(userId:string,title:string,body:string) {
-      const payload = {
-        jwt: authData?.jwt,
-        data:{
-            userId : userId,
-            title : title,
-            body : body
-        }
-      };
-      dispatch(callSendNotificationByUserId(payload));
+  const {updateDonationSuccess, updateDonationError, isUpdateLoading} =
+    useAppSelector(updateDonationInfo);
+  const {isProfileLoading, profileSuccess} = useAppSelector(getProfileInfo);
+
+  function sendNotificationByUserId(
+    userId: string,
+    title: string,
+    body: string,
+  ) {
+    const payload = {
+      jwt: authData?.jwt,
+      data: {
+        userId: userId,
+        title: title,
+        body: body,
+      },
+    };
+    dispatch(callSendNotificationByUserId(payload));
+  }
+
+  useEffect(() => {
+    if (addDonationSuccess && addDonationSuccess?.message) {
+      Alert.alert('Donation request sent successfully');
+
+      selectedNgos?.map((e: any) => {
+        sendNotificationByNgoId(
+          e,
+          'Donation request',
+          'You have new donation request from ' + profileSuccess?.firstName,
+        );
+      });
+
+      getDonation();
+      dispatch(clearAddDonation());
     }
-  
+    if (addDonationSuccess?.error || addDonationError) {
+      Alert.alert('Error! Please try again');
+      RootNavigation.goBack();
+      dispatch(clearAddDonation());
+    }
+    if (updateDonationSuccess && updateDonationSuccess?.message) {
+      selectedNgos?.map((e: any) => {
+        sendNotificationByNgoId(
+          e,
+          'New update on donation',
+          profileSuccess?.firstName + ' Updated a donation request.',
+        );
+      });
 
-    useEffect(() => {
-      if (addDonationSuccess && addDonationSuccess?.message) {
-        Alert.alert('Donation request sent successfully');
+      Alert.alert(updateDonationSuccess?.message);
+      dispatch(updateDonationClear());
+      close();
+      getDonation();
+    }
+    if (
+      (updateDonationSuccess && updateDonationSuccess?.error) ||
+      updateDonationError
+    ) {
+      Alert.alert('Error! Please try again');
+      dispatch(updateDonationClear());
+    }
+  }, [
+    addDonationSuccess,
+    addDonationError,
+    updateDonationSuccess,
+    updateDonationError,
+  ]);
 
-        selectedNgos?.map((e:any)=>{
-          sendNotificationByNgoId(e,"Donation request","You have new donation request from "+profileSuccess?.firstName)
-       })
-
-        getDonation()
-        dispatch(clearAddDonation());
-      }
-      if (addDonationSuccess?.error || addDonationError) {
-        Alert.alert('Error! Please try again');
-        RootNavigation.goBack();
-        dispatch(clearAddDonation());
-      }
-      if (updateDonationSuccess && updateDonationSuccess?.message) {
-
-        selectedNgos?.map((e:any)=>{
-          sendNotificationByNgoId(e,"New update on donation",profileSuccess?.firstName+" Updated a donation request.")
-        })
-
-        Alert.alert(updateDonationSuccess?.message);
-        dispatch(updateDonationClear());
-        close()
-        getDonation()
-      }
-      if ((updateDonationSuccess && updateDonationSuccess?.error) || updateDonationError) {
-        Alert.alert('Error! Please try again');
-        dispatch(updateDonationClear());
-      }
-    }, [addDonationSuccess, addDonationError, updateDonationSuccess, updateDonationError,]);
-
-    const createRequest = () => {
+  const createRequest = () => {
+    if (
+      (selectedAddress?.id !== '' &&
+        selectedAddress?.id !== undefined &&
+        selectedNgos.length > 0 &&
+        fullName !== '',
+      fullName !== undefined &&
+        contactNumber !== '' &&
+        contactNumber !== undefined &&
+        selectedDeliveryType?.selectedType !== '' &&
+        selectedDeliveryType?.selectedType !== undefined &&
+        selectedDeliveryType?.selectedType !== 0 &&
+        myDate !== '' &&
+        myDate !== undefined)
+    ) {
       const payload = {
         userId: authData?.userId,
         fullName: fullName,
@@ -166,43 +211,42 @@ export const DonationForm = ({
         description: description,
         deliveryType: selectedDeliveryType?.selectedType,
         deliveryTime: myDate,
-        status : "pending",
+        status: 'pending',
       };
       dispatch(callAddDonation(payload));
       setFullName();
       setDate();
       setContactNumber();
       setDescription();
-    };
-
-    const updateDonation = () => {
-      const payload = {
-        id: item.id,
-        jwt: authData?.jwt,
-        data: {
-          userId: authData?.userId,
-          fullName: fullName,
-          ngoId: selectedNgos,
-          addressId: selectedAddress?.id,
-          donationType: selectedDonationType?.selectedType,
-          donationQuantity: selectedDonationType?.selectedQuantity,
-          donationTypeUom: selectedDonationType?.selectedUnit,
-          contactNumber: contactNumber,
-          description: description,
-          deliveryType: selectedDeliveryType?.selectedType,
-          deliveryTime: myDate,
-          status : "pending",
-        },
-      };
-      dispatch(callUpdateDonation(payload));
-
+    } else {
+      Alert.alert('Please select all the required fields');
     }
+  };
 
+  const updateDonation = () => {
+    const payload = {
+      id: item.id,
+      jwt: authData?.jwt,
+      data: {
+        userId: authData?.userId,
+        fullName: fullName,
+        ngoId: selectedNgos,
+        addressId: selectedAddress?.id,
+        donationType: selectedDonationType?.selectedType,
+        donationQuantity: selectedDonationType?.selectedQuantity,
+        donationTypeUom: selectedDonationType?.selectedUnit,
+        contactNumber: contactNumber,
+        description: description,
+        deliveryType: selectedDeliveryType?.selectedType,
+        deliveryTime: myDate,
+        status: 'pending',
+      },
+    };
+    dispatch(callUpdateDonation(payload));
+  };
 
-  ///////////////////////////////////////////////////////////////
 
   return (
-
     <View style={type === undefined ? styles.scroll : {}}>
       {isAddDonationLoading || isUpdateLoading || isAddressLoading ? (
         <ActivityIndicator
@@ -212,14 +256,14 @@ export const DonationForm = ({
         />
       ) : (
         <>
-          <View style={{marginHorizontal: type? 0 : 45}}>
+          <View style={{marginHorizontal: type ? 0 : 45}}>
             <CustomInputText
-              holder={'Enter Full Name'}x
+              holder={'Enter Full Name'}
+              x
               value={fullName}
               onChangeText={e => {
-                  setFullName(e);
-                }
-              }
+                setFullName(e);
+              }}
             />
 
             <DropDownPickupLocation
@@ -235,28 +279,36 @@ export const DonationForm = ({
               lat={lat}
               long={long}
             />
-       
-            <DropDownTypeOfDonation onTypeSelect={callSelectedDonationType} value={item?item.donationType:undefined} qat={item?parseInt(item.donationQuantity):undefined} unit={item?item.donationTypeUom:undefined} />
-            <DropDownTypeOfDelivery onTypeSelect={callSelectedDeliveryType} value={selectedDeliveryType}/>
+
+            <DropDownTypeOfDonation
+              onTypeSelect={callSelectedDonationType}
+              value={item ? item.donationType : undefined}
+              qat={item ? parseInt(item.donationQuantity) : undefined}
+              unit={item ? item.donationTypeUom : undefined}
+            />
+            <DropDownTypeOfDelivery
+              onTypeSelect={callSelectedDeliveryType}
+              value={selectedDeliveryType}
+            />
 
             <View style={styles.padding}>
               <Pressable
-              style={openPicker ? styles.view2 : styles.style}
-              onPress={() => setOpenPicker(!openPicker)}>
-              <TextInput
-                placeholderTextColor={
-                  openPicker ? Colors.Button.primary : Colors.Text.gray
-                }
-                placeholder={'Select Delivery Time'}
-                value={myDate}
-                style={openPicker ? styles.input1 : styles.input2}
-              />
+                style={openPicker ? styles.view2 : styles.style}
+                onPress={() => setOpenPicker(!openPicker)}>
+                <TextInput
+                  placeholderTextColor={
+                    openPicker ? Colors.Button.primary : Colors.Text.gray
+                  }
+                  placeholder={'Select Delivery Time'}
+                  value={myDate}
+                  style={openPicker ? styles.input1 : styles.input2}
+                />
 
                 <Icon
                   name="calendar"
                   size={Spacing.size20}
                   color={Colors.Text.gray}
-                  style={{alignSelf:'center'}}
+                  style={{alignSelf: 'center'}}
                   onPress={() => setOpenPicker(true)}
                 />
               </Pressable>
@@ -271,7 +323,7 @@ export const DonationForm = ({
                 setOpenPicker(false);
               }}
             />
-          
+
             <View style={styles.mobile}>
               <MobileText
                 phoneNumber={contactNumber}
@@ -310,7 +362,6 @@ export const DonationForm = ({
               />
             </View>
           )}
-
         </>
       )}
     </View>
