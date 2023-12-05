@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 200,
     paddingVertical: 20,
+    marginTop: 100,
   },
   card: {
     backgroundColor:
