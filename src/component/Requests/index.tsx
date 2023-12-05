@@ -140,7 +140,7 @@ const Requests = ({data}: any) => {
               icon={icons.notFound}
               key={'icon'}
             />
-            <Text style={styles.notFound}>Not found</Text>
+            {/* <Text style={styles.notFound}>Not found</Text> */}
           </View>
         }
         style={{paddingTop: 10}}

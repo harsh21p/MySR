@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 215,
   },
-  notFound:{
+  notFound: {
     alignSelf: 'center',
     alignContent: 'center',
     fontSize: 17,
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 200,
     paddingVertical: 20,
+    marginTop: 100,
   },
   card: {
     backgroundColor:
