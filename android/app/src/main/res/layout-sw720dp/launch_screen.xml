@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Giving is more than just a transaction;\n it's about bringing positive change."
+          android:text="Giving is not just about making a Donation. \n It is about making a difference."
         android:textColor="#1B2E72"
         android:textFontWeight="700"
         android:textSize="45sp"
